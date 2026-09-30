@@ -1,0 +1,56 @@
+# MGG
+
+Offline-fähige Puzzle-App. Spielmodi und Level sind austauschbar und kommen als Pakete
+(eingebaut, ZIP-Datei oder Git-Archiv per URL).
+
+## Starten
+```bash
+npm install
+npm run dev                    # http://localhost:5173
+# oder als Container:
+docker compose up -d --build   # http://localhost:8080
+```
+Nicht per `file://` öffnen – die App lädt ihre Pakete per fetch.
+
+## Pixel-Modus (Regeln)
+- Das Bild verschwindet von außen nach innen: nur **freigelegte** Pixel (Rand oder leeres Nachbarfeld) können getroffen werden.
+- Unten liegt der Vorrat an Blöcken (Farbe + Munition). Antippen legt einen Block in einen freien **Slot**.
+- Ein Block im Slot schießt automatisch auf freigelegte Pixel seiner Farbe, bis die Munition leer ist. Dann wird der Slot frei.
+- Gewonnen: alle Pixel weg. Verloren: kein Zug mehr möglich (Slots blockiert oder Munition falsch verteilt).
+- Während geschossen wird, sind Eingaben gesperrt (so ist jedes Level per Solver exakt prüfbar).
+
+## Paket-Format
+```
+mein-paket/
+  manifest.json
+  levels/l01.json
+```
+`manifest.json`:
+```json
+{ "id": "mein-paket", "name": "Mein Paket", "version": "1.0.0", "mode": "pixel",
+  "levels": [ { "id": "l01", "file": "levels/l01.json", "name": "Herz" } ] }
+```
+Pixel-Level:
+```json
+{ "id": "l01", "name": "Herz",
+  "palette": ["#e63946", "#f5f5f5"],
+  "image": ["..0.0..", ".00000."],
+  "slots": 4,
+  "blocks": [ { "color": 0, "ammo": 4 } ] }
+```
+`image`: `.` = leer, sonst Palettenindex (0-9, a-z). Die Summe der Munition je Farbe muss mindestens der Pixelzahl dieser Farbe entsprechen.
+
+ZIP/Git-Archive dürfen einen Top-Ordner haben (wie `.../archive/main.zip` bei Gitea/GitHub).
+
+## Eingebaute Level neu erzeugen
+```bash
+npm run gen:levels
+```
+Erzeugt `public/content/classic`, prüft jedes Level mit dem Solver auf Lösbarkeit und sortiert nach gemessener Schwierigkeit.
+
+## Struktur
+- `src/core/` - Engine, Typen, Modus-Registry, Fortschritt
+- `src/modes/pixel/` - Spiellogik (`logic.ts`, DOM-frei) und Darstellung (`index.ts`)
+- `src/content/packs.ts` - Pakete laden, ZIP-Import (IndexedDB)
+- `src/ui/app.ts` - Menü, HUD, Ergebnis-Overlay
+- `tools/gen-levels.ts` - Level-Generator + Solver-Check

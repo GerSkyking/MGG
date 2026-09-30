@@ -1,0 +1,58 @@
+{
+  "id": "classic",
+  "name": "Klassik",
+  "version": "0.2.0",
+  "mode": "pixel",
+  "levels": [
+    {
+      "id": "l01",
+      "file": "levels/l01.json",
+      "name": "Herz"
+    },
+    {
+      "id": "l02",
+      "file": "levels/l02.json",
+      "name": "Baum"
+    },
+    {
+      "id": "l03",
+      "file": "levels/l03.json",
+      "name": "Sonne"
+    },
+    {
+      "id": "l04",
+      "file": "levels/l04.json",
+      "name": "Pilz"
+    },
+    {
+      "id": "l05",
+      "file": "levels/l05.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l06",
+      "file": "levels/l06.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l07",
+      "file": "levels/l07.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l08",
+      "file": "levels/l08.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l09",
+      "file": "levels/l09.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l10",
+      "file": "levels/l10.json",
+      "name": "Mandala"
+    }
+  ]
+}

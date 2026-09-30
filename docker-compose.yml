@@ -1,0 +1,7 @@
+services:
+  mgg:
+    build: .
+    container_name: mgg
+    ports:
+      - "8080:80"
+    restart: unless-stopped
