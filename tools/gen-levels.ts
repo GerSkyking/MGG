@@ -111,7 +111,7 @@ const defs: Def[] = [
       [".RR.RR.", "RWRRRRR", "RRRRRRR", ".RRRRR.", "..RRR..", "...R..."],
       "RW",
     ),
-    slots: 4, rate: 0.9,
+    slots: 4, rate: 0.98,
     chunk: [2, 4],
   },
   {
@@ -121,7 +121,7 @@ const defs: Def[] = [
       ["...G...", "..GGG..", ".GGDGG.", "GGGGGDG", ".GDGGG.", "GGGGGGG", "...B...", "...B..."],
       "GDB",
     ),
-    slots: 4, rate: 0.7,
+    slots: 4, rate: 0.9,
     chunk: [3, 6],
   },
   {
@@ -141,7 +141,7 @@ const defs: Def[] = [
       ],
       "YO",
     ),
-    slots: 3, rate: 0.5,
+    slots: 3, rate: 0.75,
     chunk: [3, 6],
   },
   {
@@ -161,31 +161,31 @@ const defs: Def[] = [
       ],
       "RWB",
     ),
-    slots: 3, rate: 0.35,
+    slots: 3, rate: 0.6,
     chunk: [4, 8],
   },
-  { name: "Ringe", palette: [P.blue, P.yellow, P.red], image: rings(8, 3), slots: 3, rate: 0.25, chunk: [4, 8] },
-  { name: "Raute", palette: [P.teal, P.purple, P.orange, P.white], image: diamond(11, 4), slots: 3, rate: 0.15, chunk: [5, 10] },
-  { name: "Zielscheibe", palette: [P.red, P.white, P.blue, P.yellow], image: target(12, 4), slots: 2, rate: 0.1, chunk: [6, 12] },
+  { name: "Ringe", palette: [P.blue, P.yellow, P.red], image: rings(8, 3), slots: 3, rate: 0.45, chunk: [4, 8] },
+  { name: "Raute", palette: [P.teal, P.purple, P.orange, P.white], image: diamond(11, 4), slots: 3, rate: 0.32, chunk: [5, 10] },
+  { name: "Zielscheibe", palette: [P.red, P.white, P.blue, P.yellow], image: target(12, 4), slots: 2, rate: 0.2, chunk: [6, 12] },
   {
     name: "Kaleidoskop",
     palette: [P.pink, P.teal, P.yellow, P.purple, P.blue],
     image: kaleido(12, 5, 4, 1.4),
-    slots: 2, rate: 0.06,
+    slots: 2, rate: 0.12,
     chunk: [6, 12],
   },
   {
     name: "Blüte",
     palette: [P.pink, P.white, P.yellow, P.orange, P.purple],
     image: kaleido(13, 5, 6, 1.5, 2),
-    slots: 2, rate: 0.03,
+    slots: 2, rate: 0.06,
     chunk: [7, 14],
   },
   {
     name: "Mandala",
     palette: [P.red, P.orange, P.yellow, P.green, P.blue, P.purple],
     image: kaleido(14, 6, 8, 1.2, 2),
-    slots: 2, rate: 0.015,
+    slots: 2, rate: 0.03,
     chunk: [8, 16],
   },
 ];
@@ -238,36 +238,37 @@ const results: { level: PixelLevel; rate: number; pixels: number }[] = [];
 
 defs.forEach((d, idx) => {
   const id = `tmp${idx}`;
-  let slots = d.slots;
   let chosen: PixelLevel | null = null;
   let chosenRate = 0;
   const t0 = Date.now();
 
-  while (!chosen) {
-    let bestDist = Infinity;
-    for (let seed = 1; seed <= 120; seed++) {
+  // Slots und Munitions-Stückelung variieren, nimm die Variante, deren
+  // Zufalls-Gewinnrate am nächsten am Ziel liegt.
+  let bestDist = Infinity;
+  for (const k of [0.5, 0.75, 1, 1.5]) {
+   const chunk: [number, number] = [Math.max(1, Math.round(d.chunk[0] * k)), Math.max(2, Math.round(d.chunk[1] * k))];
+   for (let slots = 1; slots <= 6; slots++) {
+    for (let seed = 1; seed <= 30; seed++) {
       const level: PixelLevel = {
         id,
         name: d.name,
         palette: d.palette,
         image: d.image,
         slots,
-        blocks: makeBlocks(d.image, d.palette.length, d.chunk, rng(seed * 7919 + idx)),
+        blocks: makeBlocks(d.image, d.palette.length, chunk, rng(seed * 7919 + idx + Math.round(k * 100) * 13)),
       };
       if (solve(level).result !== "solved") continue;
-      const rate = randomWinRate(level, 400, rng(seed + 99));
-      const dist = Math.abs(Math.log((rate + 0.005) / (d.rate + 0.005)));
+      const rate = randomWinRate(level, 200, rng(seed + 99));
+      const dist = Math.abs(Math.log((rate + 0.01) / (d.rate + 0.01)));
       if (dist < bestDist) {
         bestDist = dist;
         chosen = level;
         chosenRate = rate;
       }
     }
-    if (!chosen) {
-      slots++;
-      if (slots > 8) throw new Error(`Level ${id}: keine lösbare Variante gefunden`);
-    }
+   }
   }
+  if (!chosen) throw new Error(`Level ${id}: keine lösbare Variante gefunden`);
 
   const level = parseLevel(chosen); // Validierung
   const pixels = level.image.join("").replace(/\./g, "").length;

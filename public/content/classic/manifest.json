@@ -12,12 +12,12 @@
     {
       "id": "l02",
       "file": "levels/l02.json",
-      "name": "Baum"
+      "name": "Sonne"
     },
     {
       "id": "l03",
       "file": "levels/l03.json",
-      "name": "Sonne"
+      "name": "Baum"
     },
     {
       "id": "l04",
@@ -27,27 +27,27 @@
     {
       "id": "l05",
       "file": "levels/l05.json",
-      "name": "Ringe"
+      "name": "Raute"
     },
     {
       "id": "l06",
       "file": "levels/l06.json",
-      "name": "Blüte"
+      "name": "Ringe"
     },
     {
       "id": "l07",
       "file": "levels/l07.json",
-      "name": "Kaleidoskop"
+      "name": "Zielscheibe"
     },
     {
       "id": "l08",
       "file": "levels/l08.json",
-      "name": "Raute"
+      "name": "Kaleidoskop"
     },
     {
       "id": "l09",
       "file": "levels/l09.json",
-      "name": "Zielscheibe"
+      "name": "Blüte"
     },
     {
       "id": "l10",
