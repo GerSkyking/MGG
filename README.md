@@ -42,6 +42,12 @@ Pixel-Level:
 
 ZIP/Git-Archive dürfen einen Top-Ordner haben (wie `.../archive/main.zip` bei Gitea/GitHub).
 
+## Pakete aus Git laden und aktualisieren
+- Im Menü unter "Pakete laden": Repo-URL (`https://git.jensr.de/user/repo`) und Branch/Tag (Standard `main`) eingeben, oder direkt einen ZIP-Link. Die App holt `…/archive/<ref>.zip`.
+- Die Quelle wird beim Paket gespeichert. "Auf Update prüfen" lädt das Archiv und vergleicht `version` im Manifest (numerisch, z. B. 1.10.0 > 1.9.0). Ist sie neuer, erscheint "Auf vX aktualisieren". Kein automatischer Check, kein Zwang.
+- CORS: Downloads von `git.jensr.de` laufen im Browser über den Proxy `/gitproxy/` (nginx im Container, `vite`-Proxy im Dev-Server). Der Proxy ist fest auf diese Instanz und nur auf GET beschränkt. Andere Hosts werden direkt geladen und brauchen CORS. In der Android-App (Capacitor) entfällt der Proxy.
+- Level-IDs müssen im Paket stabil bleiben, damit der Fortschritt beim Update erhalten bleibt.
+
 ## Eingebaute Level neu erzeugen
 ```bash
 npm run gen:levels

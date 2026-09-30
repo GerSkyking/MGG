@@ -20,10 +20,16 @@ von außen nach innen wegschießen. Jedes Level soll schwerer werden, später ne
   und nur aus vertrauten Repos (Sicherheitsrisiko).
 - Kein Update-Zwang über Store: Updates laufen über Git-Download der Pakete (Schritt 3).
 
-## Stand (Schritte 1 und 2 erledigt)
+## Stand (Schritte 1 bis 3 erledigt)
 1. Projektgerüst, Docker Compose, Engine, Modus-Registry.
 2. Pixel-Modus komplett, Menü mit Fortschritt (localStorage), 10 eingebaute Level, ZIP-Import
    (Datei und URL) in IndexedDB. Headless-Browser-Test mit Playwright war grün.
+3. Git-Updates: Repo-URL + Branch/Tag oder ZIP-Link, Quelle wird gespeichert, "Auf Update prüfen"
+   (Manifest-`version`), "Aktualisieren". nginx-Proxy `/gitproxy/` -> `git.jensr.de` (nur GET, Variable +
+   resolver, damit nginx auch offline startet), Vite-Dev-Proxy gleich. Im Browser gegen lokalen Testserver
+   getestet (Import, aktuell, Update, Reload). **Noch nicht gegen das echte Gitea/den nginx-Proxy getestet.**
+   Level 1-10 neu erzeugt: Zufallsspieler-Gewinnrate fällt von 98 % auf 3 % (Generator variiert Slots 1-6
+   und Munitions-Stückelung, Ziel-Kurve in `tools/gen-levels.ts`).
 
 Struktur:
 - `src/core/` Engine (Game-Loop, Pointer), `types.ts` (GameMode, GameHost, PackManifest), `registry.ts`
@@ -53,10 +59,6 @@ docker compose up -d --build   # http://localhost:8080
 ```
 
 ## Offene Schritte (jeweils einzeln mit Sky bestätigen)
-3. **Git-Updates von Paketen**: Paket-Quelle (Gitea-Repo-URL + Branch/Tag) speichern, auf neue
-   Version prüfen (Manifest-`version`), aktualisieren. Browser-Download von Gitea scheitert ohne CORS:
-   dann kleiner Proxy im Docker Compose (nginx `location /gitproxy/`) oder Gitea-CORS aktivieren.
-   Der Download per URL ist bisher **nicht gegen das echte Gitea getestet**.
 4. **Editor in der App**: Pixel-Level malen (Palette, Raster), Blöcke/Slots festlegen, Solver-Check
    (`solve` aus `logic.ts` wiederverwenden), lokal speichern, Export als ZIP. Modus-Editor (Regeln als JSON).
 5. **Android**: Capacitor um den Vite-Build, Download direkt ohne CORS-Proxy.
@@ -65,6 +67,6 @@ docker compose up -d --build   # http://localhost:8080
 
 ## Bekannte Lücken
 - Kein Service Worker/PWA-Manifest (Offline im Browser nur über lokal laufenden Container).
-- Schwierigkeitskurve: Level 1-4 sehr leicht, Level 10 sehr schwer (Zufallsspieler-Gewinnrate 1,8 %).
-  Feinjustierung nach Sky's Testfeedback offen.
+- Schwierigkeitskurve nur per Zufallsspieler gemessen, nicht mit echten Spielern. Feinjustierung nach
+  Sky's Testfeedback offen (Level 7-10 haben 1 Slot).
 - Kein Ton, keine Undo-Funktion, keine Level-Vorschau im Menü.

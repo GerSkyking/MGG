@@ -7,6 +7,8 @@ export interface LoadedPack {
   key: string;
   source: "builtin" | "imported";
   manifest: PackManifest;
+  /** Download-URL des Archivs (nur bei importierten Paketen aus dem Netz), für Updates */
+  sourceUrl?: string;
   loadLevel(file: string): Promise<unknown>;
 }
 
@@ -14,6 +16,7 @@ interface StoredPack {
   id: string;
   manifest: PackManifest;
   files: Record<string, string>;
+  sourceUrl?: string;
 }
 
 const ID_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/;
@@ -107,6 +110,7 @@ export async function loadImportedPacks(): Promise<LoadedPack[]> {
     key: `imported:${p.id}`,
     source: "imported" as const,
     manifest: p.manifest,
+    sourceUrl: p.sourceUrl,
     async loadLevel(file: string) {
       const text = p.files[file];
       if (text === undefined) throw new Error(`Level-Datei fehlt: ${file}`);
@@ -121,10 +125,9 @@ export async function deleteImportedPack(id: string): Promise<void> {
 
 const baseName = (p: string): string => p.slice(p.lastIndexOf("/") + 1);
 
-/** Liest ein ZIP (Git-Archiv oder eigenes Paket), validiert und speichert es. */
-export async function importZip(data: Uint8Array): Promise<PackManifest> {
+/** Liest nur die manifest.json aus einem ZIP (Git-Archive haben oft einen Top-Ordner). */
+export function readManifest(data: Uint8Array): { manifest: PackManifest; prefix: string } {
   if (data.length > MAX_ZIP) throw new Error("ZIP zu groß (max. 20 MB)");
-
   let found: Record<string, Uint8Array>;
   try {
     found = unzipSync(data, {
@@ -137,13 +140,80 @@ export async function importZip(data: Uint8Array): Promise<PackManifest> {
   if (!names.length) throw new Error("manifest.json nicht im ZIP gefunden");
   const mpath = names[0];
   const prefix = mpath.slice(0, mpath.length - "manifest.json".length);
-
-  let manifest: PackManifest;
   try {
-    manifest = parseManifest(JSON.parse(strFromU8(found[mpath])));
+    return { manifest: parseManifest(JSON.parse(strFromU8(found[mpath]))), prefix };
   } catch (e) {
     throw e instanceof SyntaxError ? new Error("manifest.json ist kein gültiges JSON") : e;
   }
+}
+
+/** Vergleicht Versionen wie "1.2.10" numerisch. >0: a ist neuer als b. */
+export function compareVersions(a: string, b: string): number {
+  const pa = a.split(/[.-]/).map((x) => parseInt(x, 10) || 0);
+  const pb = b.split(/[.-]/).map((x) => parseInt(x, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] ?? 0) - (pb[i] ?? 0);
+    if (d !== 0) return d;
+  }
+  return 0;
+}
+
+// ---------- Download (Git/Gitea) ----------
+
+/** Nur diese Gitea-Instanz läuft über den nginx-Proxy /gitproxy/ (umgeht fehlendes CORS). */
+const PROXY_HOST = "git.jensr.de";
+const REF_RE = /^[A-Za-z0-9._/-]{1,100}$/;
+
+/** Macht aus einer Repo-URL (https://host/user/repo) + Branch/Tag eine Archiv-URL; ZIP-URLs bleiben unverändert. */
+export function toArchiveUrl(input: string, ref: string): string {
+  let u: URL;
+  try {
+    u = new URL(input.trim());
+  } catch {
+    throw new Error("Ungültige URL");
+  }
+  if (u.protocol !== "https:" && u.protocol !== "http:") throw new Error("Bitte eine http(s)-URL angeben");
+  if (/\.zip$/i.test(u.pathname)) return u.toString();
+  const parts = u.pathname.split("/").filter(Boolean);
+  if (parts.length !== 2) throw new Error("URL nicht erkannt: Repo-URL (…/user/repo) oder ZIP-Link angeben");
+  const r = ref.trim() || "main";
+  if (!REF_RE.test(r) || r.includes("..")) throw new Error("Ungültiger Branch/Tag");
+  const repo = parts[1].replace(/\.git$/i, "");
+  return `${u.origin}/${parts[0]}/${repo}/archive/${r}.zip`;
+}
+
+const isNative = (): boolean =>
+  !!(window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();
+
+/** Leitet Downloads von der eigenen Gitea über den Proxy, alle anderen direkt. */
+export function resolveFetchUrl(url: string): string {
+  const u = new URL(url);
+  if (u.protocol === "https:" && u.host === PROXY_HOST && !isNative()) return "gitproxy" + u.pathname + u.search;
+  return url;
+}
+
+export async function downloadZip(url: string): Promise<Uint8Array> {
+  let res: Response;
+  try {
+    res = await fetch(resolveFetchUrl(url));
+  } catch {
+    throw new Error("Download fehlgeschlagen (Netzwerk oder CORS des Servers)");
+  }
+  if (!res.ok) throw new Error(`Download fehlgeschlagen: HTTP ${res.status}`);
+  const len = Number(res.headers.get("content-length") ?? 0);
+  if (len > MAX_ZIP) throw new Error("ZIP zu groß (max. 20 MB)");
+  const buf = new Uint8Array(await res.arrayBuffer());
+  if (buf.length > MAX_ZIP) throw new Error("ZIP zu groß (max. 20 MB)");
+  return buf;
+}
+
+async function getStored(id: string): Promise<StoredPack | undefined> {
+  return withStore<StoredPack | undefined>("readonly", (s) => s.get(id) as IDBRequest<StoredPack | undefined>);
+}
+
+/** Liest ein ZIP (Git-Archiv oder eigenes Paket), validiert und speichert es. */
+export async function importZip(data: Uint8Array, sourceUrl?: string): Promise<PackManifest> {
+  const { manifest, prefix } = readManifest(data);
 
   const wanted = new Map<string, string>();
   for (const l of manifest.levels) wanted.set(prefix + l.file, l.file);
@@ -162,7 +232,8 @@ export async function importZip(data: Uint8Array): Promise<PackManifest> {
     files[file] = text;
   }
 
-  const rec: StoredPack = { id: manifest.id, manifest, files };
+  const old = await getStored(manifest.id).catch(() => undefined);
+  const rec: StoredPack = { id: manifest.id, manifest, files, sourceUrl: sourceUrl ?? old?.sourceUrl };
   await withStore("readwrite", (s) => s.put(rec));
   return manifest;
 }
