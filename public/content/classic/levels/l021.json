@@ -1,0 +1,1 @@
+{"id":"l021","name":"Kaleidoskop","palette":["#f28c28","#e9c9a0"],"image":["..111..",".01010.","0010100","0111001","1101011",".10101.","..000.."],"slots":2,"blocks":[{"color":1,"ammo":1},{"color":0,"ammo":1},{"color":0,"ammo":2},{"color":1,"ammo":5},{"color":0,"ammo":15},{"color":1,"ammo":1,"link":{"color":1,"ammo":12}}]}

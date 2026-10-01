@@ -20,7 +20,7 @@ von außen nach innen wegschießen. Jedes Level soll schwerer werden, später ne
   und nur aus vertrauten Repos (Sicherheitsrisiko).
 - Kein Update-Zwang über Store: Updates laufen über Git-Download der Pakete (Schritt 3).
 
-## Stand (Schritte 1 bis 3 erledigt)
+## Stand (Schritte 1 bis 3 erledigt, plus neue Mechaniken und 100 Level)
 1. Projektgerüst, Docker Compose, Engine, Modus-Registry.
 2. Pixel-Modus komplett, Menü mit Fortschritt (localStorage), 10 eingebaute Level, ZIP-Import
    (Datei und URL) in IndexedDB. Headless-Browser-Test mit Playwright war grün.
@@ -28,20 +28,23 @@ von außen nach innen wegschießen. Jedes Level soll schwerer werden, später ne
    (Manifest-`version`), "Aktualisieren". nginx-Proxy `/gitproxy/` -> `git.jensr.de` (nur GET, Variable +
    resolver, damit nginx auch offline startet), Vite-Dev-Proxy gleich. Im Browser gegen lokalen Testserver
    getestet (Import, aktuell, Update, Reload). **Noch nicht gegen das echte Gitea/den nginx-Proxy getestet.**
-   Level 1-10 neu erzeugt: Zufallsspieler-Gewinnrate fällt von 98 % auf 3 % (Generator variiert Slots 1-6
-   und Munitions-Stückelung, Ziel-Kurve in `tools/gen-levels.ts`).
+   Neue Mechaniken in `logic.ts`/`index.ts`: Stapel (`columns`), Doppelblock (`link`), Schlüsselblock (`lock`),
+   Joker (color -1), harte Pixel (`hard`), gesperrte Slots (`slotLocks`), Nebel (`window`). Format siehe README.
+   100 Level in 10 Welten (`tools/gen-levels.ts`), alle per Solver geprüft (400k-Knoten-Limit), Browser-Smoketest
+   mit Screenshots grün. Zufallsspieler-Gewinnrate fällt je Welt von ca. 80 % auf ca. 4 %.
+   Bewusst nicht gebaut: Bombe, Farbwechsel.
 
 Struktur:
 - `src/core/` Engine (Game-Loop, Pointer), `types.ts` (GameMode, GameHost, PackManifest), `registry.ts`
   (Modus registrieren + Level-Validator), `progress.ts`
-- `src/modes/pixel/logic.ts` reine Logik (DOM-frei): parseLevel, createState, step, status, solve
+- `src/modes/pixel/logic.ts` reine Logik (DOM-frei): parseLevel, createState, placeBlock(Spalte), legalMoves, step, status, solve
 - `src/modes/pixel/index.ts` Darstellung/Eingabe des Pixel-Modus
 - `src/content/packs.ts` eingebaute Pakete (`public/content/`), ZIP-Import, IndexedDB
 - `src/ui/app.ts` Menü, HUD, Ergebnis-Overlay
 - `tools/gen-levels.ts` erzeugt `public/content/classic`, prüft per Solver, sortiert nach gemessener Schwierigkeit
 
 ## Wichtige Regeln im Code (nicht brechen)
-- **Solver-Modell = Laufzeitverhalten.** Während Blöcke schießen, ist Eingabe gesperrt; Schussreihenfolge
+- **Solver-Modell = Laufzeitverhalten.** (Spalten-Index statt Vorrats-Index; Schlüssel/Nebel/Slot-Sperren hängen am Zustand, `stateKey` muss alles abbilden, was Züge beeinflusst.) Während Blöcke schießen, ist Eingabe gesperrt; Schussreihenfolge
   ist deterministisch (Slot-Reihenfolge, Pixel zeilenweise von oben links). Nur so garantiert der Solver
   Lösbarkeit. Wer die Spielregeln ändert, muss `logic.ts` (`step`, `status`, `solve`) mitziehen.
 - Pixel gilt als freigelegt, wenn ein 4er-Nachbar leer oder außerhalb des Bilds ist.

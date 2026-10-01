@@ -30,7 +30,7 @@ mein-paket/
 { "id": "mein-paket", "name": "Mein Paket", "version": "1.0.0", "mode": "pixel",
   "levels": [ { "id": "l01", "file": "levels/l01.json", "name": "Herz" } ] }
 ```
-Pixel-Level:
+Pixel-Level (einfach):
 ```json
 { "id": "l01", "name": "Herz",
   "palette": ["#e63946", "#f5f5f5"],
@@ -38,7 +38,16 @@ Pixel-Level:
   "slots": 4,
   "blocks": [ { "color": 0, "ammo": 4 } ] }
 ```
-`image`: `.` = leer, sonst Palettenindex (0-9, a-z). Die Summe der Munition je Farbe muss mindestens der Pixelzahl dieser Farbe entsprechen.
+`image`: `.` = leer, sonst Palettenindex (0-9, a-z). Die Munition muss die Treffer je Farbe decken.
+
+Erweiterte Felder (alle optional):
+- `columns`: statt `blocks` ein Vorrat aus **Stapeln**. `[[{…},{…}],[{…}]]`, Index 0 = oberster, spielbarer Block. Die ersten zwei sind sichtbar, tiefere verdeckt.
+- Block `link: { "color": 1, "ammo": 3 }`: **Doppelblock** (zwei Teile, belegt beim Setzen zwei freie Slots; Farben dürfen gleich sein = verbundene Blöcke).
+- Block `lock: 2`: **Schlüsselblock**, spielbar erst wenn alle Pixel der Farbe 2 weg sind.
+- Block `color: -1`: **Joker**, schießt auf jede Farbe.
+- `hard`: Zeilen wie `image`, `1` = **hartes Pixel** (2 Treffer).
+- `slotLocks`: z. B. `[0,0,8]`, Slot 3 öffnet sich nach 8 Schüssen.
+- `window`: **Nebel**, nur die ersten N Spalten sind spielbar, der Rest ist verdeckt.
 
 ZIP/Git-Archive dürfen einen Top-Ordner haben (wie `.../archive/main.zip` bei Gitea/GitHub).
 
@@ -52,7 +61,10 @@ ZIP/Git-Archive dürfen einen Top-Ordner haben (wie `.../archive/main.zip` bei G
 ```bash
 npm run gen:levels
 ```
-Erzeugt `public/content/classic`, prüft jedes Level mit dem Solver auf Lösbarkeit und sortiert nach gemessener Schwierigkeit.
+Erzeugt `public/content/classic` (100 Level in 10 Welten, je eine neue Mechanik), prüft jedes Level mit dem Solver auf Lösbarkeit und trimmt die Schwierigkeit (Gewinnrate eines Zufallsspielers) auf eine Kurve je Welt.
+`WORLDS=4,5 npm run gen:levels` erzeugt nur diese Welten neu, `FROM=88 TO=90` nur diese Level-Nummern.
+
+Welten: 1 Grundspiel · 2 Stapel · 3 Doppelblöcke · 4 Schlüssel · 5 harte Pixel · 6 gesperrte Slots · 7 Nebel · 8 Joker · 9 Stapel+Doppel+Schlüssel · 10 alles zusammen.
 
 ## Struktur
 - `src/core/` - Engine, Typen, Modus-Registry, Fortschritt

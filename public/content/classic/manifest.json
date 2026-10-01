@@ -1,58 +1,508 @@
 {
   "id": "classic",
   "name": "Klassik",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "mode": "pixel",
   "levels": [
     {
-      "id": "l01",
-      "file": "levels/l01.json",
+      "id": "l001",
+      "file": "levels/l001.json",
       "name": "Herz"
     },
     {
-      "id": "l02",
-      "file": "levels/l02.json",
-      "name": "Sonne"
-    },
-    {
-      "id": "l03",
-      "file": "levels/l03.json",
+      "id": "l002",
+      "file": "levels/l002.json",
       "name": "Baum"
     },
     {
-      "id": "l04",
-      "file": "levels/l04.json",
-      "name": "Pilz"
-    },
-    {
-      "id": "l05",
-      "file": "levels/l05.json",
-      "name": "Raute"
-    },
-    {
-      "id": "l06",
-      "file": "levels/l06.json",
+      "id": "l003",
+      "file": "levels/l003.json",
       "name": "Ringe"
     },
     {
-      "id": "l07",
-      "file": "levels/l07.json",
-      "name": "Zielscheibe"
+      "id": "l004",
+      "file": "levels/l004.json",
+      "name": "Pilz"
     },
     {
-      "id": "l08",
-      "file": "levels/l08.json",
-      "name": "Kaleidoskop"
+      "id": "l005",
+      "file": "levels/l005.json",
+      "name": "Mosaik"
     },
     {
-      "id": "l09",
-      "file": "levels/l09.json",
+      "id": "l006",
+      "file": "levels/l006.json",
+      "name": "Mosaik"
+    },
+    {
+      "id": "l007",
+      "file": "levels/l007.json",
+      "name": "Mandala"
+    },
+    {
+      "id": "l008",
+      "file": "levels/l008.json",
+      "name": "Mandala"
+    },
+    {
+      "id": "l009",
+      "file": "levels/l009.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l010",
+      "file": "levels/l010.json",
+      "name": "Spirale"
+    },
+    {
+      "id": "l011",
+      "file": "levels/l011.json",
       "name": "Blüte"
     },
     {
-      "id": "l10",
-      "file": "levels/l10.json",
+      "id": "l012",
+      "file": "levels/l012.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l013",
+      "file": "levels/l013.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l014",
+      "file": "levels/l014.json",
+      "name": "Kreuz"
+    },
+    {
+      "id": "l015",
+      "file": "levels/l015.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l016",
+      "file": "levels/l016.json",
+      "name": "Mosaik"
+    },
+    {
+      "id": "l017",
+      "file": "levels/l017.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l018",
+      "file": "levels/l018.json",
       "name": "Mandala"
+    },
+    {
+      "id": "l019",
+      "file": "levels/l019.json",
+      "name": "Mandala"
+    },
+    {
+      "id": "l020",
+      "file": "levels/l020.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l021",
+      "file": "levels/l021.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l022",
+      "file": "levels/l022.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l023",
+      "file": "levels/l023.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l024",
+      "file": "levels/l024.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l025",
+      "file": "levels/l025.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l026",
+      "file": "levels/l026.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l027",
+      "file": "levels/l027.json",
+      "name": "Mosaik"
+    },
+    {
+      "id": "l028",
+      "file": "levels/l028.json",
+      "name": "Mosaik"
+    },
+    {
+      "id": "l029",
+      "file": "levels/l029.json",
+      "name": "Mandala"
+    },
+    {
+      "id": "l030",
+      "file": "levels/l030.json",
+      "name": "Stern"
+    },
+    {
+      "id": "l031",
+      "file": "levels/l031.json",
+      "name": "Spirale"
+    },
+    {
+      "id": "l032",
+      "file": "levels/l032.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l033",
+      "file": "levels/l033.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l034",
+      "file": "levels/l034.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l035",
+      "file": "levels/l035.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l036",
+      "file": "levels/l036.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l037",
+      "file": "levels/l037.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l038",
+      "file": "levels/l038.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l039",
+      "file": "levels/l039.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l040",
+      "file": "levels/l040.json",
+      "name": "Mandala"
+    },
+    {
+      "id": "l041",
+      "file": "levels/l041.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l042",
+      "file": "levels/l042.json",
+      "name": "Spirale"
+    },
+    {
+      "id": "l043",
+      "file": "levels/l043.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l044",
+      "file": "levels/l044.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l045",
+      "file": "levels/l045.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l046",
+      "file": "levels/l046.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l047",
+      "file": "levels/l047.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l048",
+      "file": "levels/l048.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l049",
+      "file": "levels/l049.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l050",
+      "file": "levels/l050.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l051",
+      "file": "levels/l051.json",
+      "name": "Stern"
+    },
+    {
+      "id": "l052",
+      "file": "levels/l052.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l053",
+      "file": "levels/l053.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l054",
+      "file": "levels/l054.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l055",
+      "file": "levels/l055.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l056",
+      "file": "levels/l056.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l057",
+      "file": "levels/l057.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l058",
+      "file": "levels/l058.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l059",
+      "file": "levels/l059.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l060",
+      "file": "levels/l060.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l061",
+      "file": "levels/l061.json",
+      "name": "Mandala"
+    },
+    {
+      "id": "l062",
+      "file": "levels/l062.json",
+      "name": "Mandala"
+    },
+    {
+      "id": "l063",
+      "file": "levels/l063.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l064",
+      "file": "levels/l064.json",
+      "name": "Spirale"
+    },
+    {
+      "id": "l065",
+      "file": "levels/l065.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l066",
+      "file": "levels/l066.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l067",
+      "file": "levels/l067.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l068",
+      "file": "levels/l068.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l069",
+      "file": "levels/l069.json",
+      "name": "Kreuz"
+    },
+    {
+      "id": "l070",
+      "file": "levels/l070.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l071",
+      "file": "levels/l071.json",
+      "name": "Kristall"
+    },
+    {
+      "id": "l072",
+      "file": "levels/l072.json",
+      "name": "Kristall"
+    },
+    {
+      "id": "l073",
+      "file": "levels/l073.json",
+      "name": "Stern"
+    },
+    {
+      "id": "l074",
+      "file": "levels/l074.json",
+      "name": "Stern"
+    },
+    {
+      "id": "l075",
+      "file": "levels/l075.json",
+      "name": "Kristall"
+    },
+    {
+      "id": "l076",
+      "file": "levels/l076.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l077",
+      "file": "levels/l077.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l078",
+      "file": "levels/l078.json",
+      "name": "Herz"
+    },
+    {
+      "id": "l079",
+      "file": "levels/l079.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l080",
+      "file": "levels/l080.json",
+      "name": "Kreuz"
+    },
+    {
+      "id": "l081",
+      "file": "levels/l081.json",
+      "name": "Mosaik"
+    },
+    {
+      "id": "l082",
+      "file": "levels/l082.json",
+      "name": "Kristall"
+    },
+    {
+      "id": "l083",
+      "file": "levels/l083.json",
+      "name": "Mandala"
+    },
+    {
+      "id": "l084",
+      "file": "levels/l084.json",
+      "name": "Stern"
+    },
+    {
+      "id": "l085",
+      "file": "levels/l085.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l086",
+      "file": "levels/l086.json",
+      "name": "Spirale"
+    },
+    {
+      "id": "l087",
+      "file": "levels/l087.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l088",
+      "file": "levels/l088.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l089",
+      "file": "levels/l089.json",
+      "name": "Blüte"
+    },
+    {
+      "id": "l090",
+      "file": "levels/l090.json",
+      "name": "Ringe"
+    },
+    {
+      "id": "l091",
+      "file": "levels/l091.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l092",
+      "file": "levels/l092.json",
+      "name": "Mosaik"
+    },
+    {
+      "id": "l093",
+      "file": "levels/l093.json",
+      "name": "Mosaik"
+    },
+    {
+      "id": "l094",
+      "file": "levels/l094.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l095",
+      "file": "levels/l095.json",
+      "name": "Zielscheibe"
+    },
+    {
+      "id": "l096",
+      "file": "levels/l096.json",
+      "name": "Raute"
+    },
+    {
+      "id": "l097",
+      "file": "levels/l097.json",
+      "name": "Spirale"
+    },
+    {
+      "id": "l098",
+      "file": "levels/l098.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l099",
+      "file": "levels/l099.json",
+      "name": "Kaleidoskop"
+    },
+    {
+      "id": "l100",
+      "file": "levels/l100.json",
+      "name": "Herz"
     }
   ]
 }
